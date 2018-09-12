@@ -30,16 +30,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView?.delegate = self
         tableView?.dataSource = self
         
-        //Alamofire
+        // Alamofire
         Alamofire.request("https://kiroru-inc.jp/share/scc2018/countries.json")
-            .responseJSON{res in
+            .responseJSON { res in
                 guard let json = res.data else {
                     return
                 }
                 
                 self.items = try! JSONDecoder().decode(Array<Item>.self, from: json)
                 
-                //Debug
+                // Debug
                 print("--- Item JSON ---")
                 print(JSON(json))
                 print("--- Item Info ---")
@@ -53,17 +53,20 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
     }
     
+    
+    // MARK: - UITableViewDatasource
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.items.count
+        return items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell")
-        let item = self.items[indexPath.row]
+        let item = items[indexPath.row]
         
         let iv = cell?.viewWithTag(1) as! UIImageView
         iv.sd_setImage(with: URL(string: item.imageUrl)!)
@@ -77,18 +80,20 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return cell!
     }
     
+
+    // MARK: - UITableViewDelegate
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80.0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = self.items[indexPath.row]
-        let actionSheet : UIAlertController = UIAlertController(title: nil, message: "\(item.jname)が押されました。", preferredStyle: UIAlertControllerStyle.actionSheet)
-        let defaultAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
-            (action: UIAlertAction!) -> Void in
+        let sheet = UIAlertController(title: nil, message: "\(item.jname)が押されました。", preferredStyle: UIAlertControllerStyle.actionSheet)
+        let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) -> Void in
             print("\(item.ename)displayed!")
-            })
-        actionSheet.addAction(defaultAction)
-        present(actionSheet, animated: true, completion: nil)
+        })
+        sheet.addAction(action)
+        present(sheet, animated: true, completion: nil)
     }
 }
