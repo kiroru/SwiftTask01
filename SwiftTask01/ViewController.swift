@@ -37,8 +37,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     return
                 }
                 
-                self.items = try! JSONDecoder().decode(Array<Item>.self, from: json)
-                
+                do {
+                    self.items = try JSONDecoder().decode(Array<Item>.self, from: json)
+                } catch let error {
+                    print(error.localizedDescription)
+                    return
+                }
+
                 // Debug
                 print("--- Item JSON ---")
                 print(JSON(json))
@@ -91,7 +96,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let item = self.items[indexPath.row]
         let sheet = UIAlertController(title: nil, message: "\(item.jname)が押されました。", preferredStyle: UIAlertControllerStyle.actionSheet)
         let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) -> Void in
-            print("\(item.ename)displayed!")
+            print("\(item.ename) displayed!")
         })
         sheet.addAction(action)
         present(sheet, animated: true, completion: nil)
