@@ -21,14 +21,13 @@ struct Item : Codable {
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var items: [Item] = []
-    
-    @IBOutlet var tableView:UITableView? = nil
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView?.delegate = self
-        tableView?.dataSource = self
+        tableView.delegate = self
+        tableView.dataSource = self
         
         // Alamofire
         Alamofire.request("https://kiroru-inc.jp/share/scc2018/countries.json")
@@ -54,7 +53,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     print("ename:" + item.ename)
                 }
                 
-                self.tableView?.reloadData()
+                self.tableView.reloadData()
         }
     }
     
@@ -70,26 +69,26 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath)
         let item = items[indexPath.row]
         
-        let iv = cell?.viewWithTag(1) as! UIImageView
-        iv.sd_setImage(with: URL(string: item.imageUrl)!)
+        let nationalFlagView = cell.viewWithTag(1) as? UIImageView
+        nationalFlagView?.sd_setImage(with: URL(string: item.imageUrl)!)
         
-        let tv1 = cell?.viewWithTag(2) as? UILabel
-        tv1?.text = item.jname
+        let jnameView = cell.viewWithTag(2) as? UILabel
+        jnameView?.text = item.jname
 
-        let tv2 = cell?.viewWithTag(3) as? UILabel
-        tv2?.text = item.ename
+        let enameView = cell.viewWithTag(3) as? UILabel
+        enameView?.text = item.ename
 
-        return cell!
+        return cell
     }
     
 
     // MARK: - UITableViewDelegate
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80.0
+        return 90.0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
